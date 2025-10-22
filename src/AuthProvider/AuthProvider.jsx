@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useEffect, useState } from "react";
 import {
   createUserWithEmailAndPassword,
@@ -14,42 +15,67 @@ import {
 
 import app from "./../Firebase/firebase.config";
 import axios from "axios";
-// eslint-disable-next-line react-refresh/only-export-components
+
 export const auth = getAuth(app);
-// eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext(null);
 
 const AuthProvider = ({ children }) => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // ✅ initial loading
   const [user, setUser] = useState(null);
+
+  // Sign Up
   const handleSignUp = (email, password) => {
     setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
   };
-  const handleSingIn = (email, password) => {
+
+  // Sign In
+  const handleSignIn = (email, password) => {
     setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
-  const handleUpdateUser = (user, updateData) => {
-    return updateProfile(user, updateData);
-  };
+
+  // Update User Profile
+  const handleUpdateUser = (user, updateData) =>
+    updateProfile(user, updateData);
+
+  // Send Email Verification
   const handleSendEmailVerification = () => {
-    setLoading(true);
-    return sendEmailVerification(auth.currentUser);
+    if (auth.currentUser) {
+      setLoading(true);
+      return sendEmailVerification(auth.currentUser);
+    }
+    return Promise.reject(new Error("No current user"));
   };
 
+  // Sign Out
+  const handleSignOut = () => {
+    setLoading(true);
+    return signOut(auth);
+  };
+
+  // Reset Password
+  const resetPassword = (email) => {
+    setLoading(true);
+    return sendPasswordResetEmail(auth, email);
+  };
+
+  // Google Sign-In
+  const provider = new GoogleAuthProvider();
+  const handleGoogle = () => signInWithPopup(auth, provider);
+
+  // Listen Auth State
   useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, async (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
         setLoading(true);
 
         try {
-          // JWT fetch
+          // Fetch JWT from backend
           const { data } = await axios.post("http://localhost:4000/jwt", {
             email: currentUser.email,
           });
-
           localStorage.setItem("access-token", data.token);
         } catch (err) {
           console.error("JWT fetch error:", err);
@@ -63,32 +89,22 @@ const AuthProvider = ({ children }) => {
       }
     });
 
-    return () => unSubscribe();
+    return () => unsubscribe();
   }, []);
-  const handleSingOut = (auth) => {
-    setLoading(true);
-    return signOut(auth);
-  };
-  const resetPassword = (email) => {
-    setLoading(true);
-    return sendPasswordResetEmail(auth, email);
-  };
-  const provider = new GoogleAuthProvider();
-  const handleGoogle = () => {
-    return signInWithPopup(auth, provider);
-  };
+
   const info = {
     user,
     loading,
     setLoading,
     handleSignUp,
     handleGoogle,
-    handleSingIn,
-    resetPassword,
-    handleSingOut,
+    handleSignIn,
+    handleSignOut,
     handleUpdateUser,
     handleSendEmailVerification,
+    resetPassword,
   };
+
   return <AuthContext.Provider value={info}>{children}</AuthContext.Provider>;
 };
 

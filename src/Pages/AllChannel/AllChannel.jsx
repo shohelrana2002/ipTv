@@ -179,6 +179,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import useApi from "../../Hooks/useApi";
+import toast from "react-hot-toast";
 
 const AllChannel = () => {
   const [data, setData] = useState([]);
@@ -203,7 +204,7 @@ const AllChannel = () => {
       setFiltered(res.data);
       setLoading(false);
     } catch (err) {
-      console.error(err);
+      toast.error(err.message);
       setLoading(false);
     }
   };
@@ -225,14 +226,8 @@ const AllChannel = () => {
         confirmButtonText: "Yes, delete it!",
       });
 
-      // const token = localStorage.getItem("access-token");
       if (result.isConfirmed) {
         await api.delete(`/${id}`);
-        // await axios.delete(`http://localhost:4000/${id}`, {
-        //   headers: {
-        //     Authorization: `Bearer ${token}`,
-        //   },
-        // });
         const updatedData = data.filter((ch) => ch._id !== id);
         setData(updatedData);
         setFiltered(updatedData);
@@ -261,9 +256,15 @@ const AllChannel = () => {
 
   // Update channel
   const handleUpdate = async () => {
+    const token = localStorage.getItem("access-token");
     try {
       const { _id } = selectedChannel;
-      await axios.put(`http://localhost:4000/${_id}`, editData);
+
+      await axios.put(`http://localhost:4000/${_id}`, editData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       const updatedData = data.map((ch) =>
         ch._id === _id ? { ...ch, ...editData } : ch
@@ -328,7 +329,7 @@ const AllChannel = () => {
           Reset
         </button>
       </div>
-
+      {/*  */}
       {/* Table */}
       <table className="w-full border-collapse shadow rounded overflow-hidden">
         <thead className="bg-gray-100">
@@ -347,7 +348,7 @@ const AllChannel = () => {
                 <td className="border px-4 py-2 text-center">{index + 1}</td>
                 <td className="border px-4 py-2 text-center">
                   <img
-                    src={ch.logo}
+                    src={ch.logo || ""}
                     alt={ch.name}
                     className="w-12 h-8 object-contain mx-auto"
                   />

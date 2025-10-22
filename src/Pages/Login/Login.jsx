@@ -11,7 +11,7 @@ const Login = () => {
   const [show, setShow] = useState(false);
   const [form, setForm] = useState({ email: "", password: "" });
   const navigate = useNavigate();
-  const { handleSingIn, user } = useGetAuth();
+  const { handleSignIn, user } = useGetAuth();
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -19,7 +19,7 @@ const Login = () => {
     e.preventDefault();
     try {
       if (!user?.emailVerified) return toast.error("Verified Your Gmail");
-      await handleSingIn(form.email, form.password);
+      await handleSignIn(form.email, form.password);
       toast.success("Login successful");
       navigate("/dashboard");
     } catch (err) {

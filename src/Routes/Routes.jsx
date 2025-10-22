@@ -8,6 +8,7 @@ import Dashboard from "../Root/Dashboard";
 import AllChannel from "../Pages/AllChannel/AllChannel";
 import Login from "../Pages/Login/Login";
 import Register from "../Pages/Register/Register";
+import PrivateRoutes from "./PrivateRoutes";
 
 export const router = createBrowserRouter([
   {
@@ -38,7 +39,11 @@ export const router = createBrowserRouter([
   },
   {
     path: "/dashBoard/allChannel",
-    Component: AllChannel,
+    element: (
+      <PrivateRoutes>
+        <AllChannel />
+      </PrivateRoutes>
+    ),
   },
 
   {
