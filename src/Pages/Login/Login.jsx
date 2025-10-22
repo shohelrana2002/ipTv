@@ -1,27 +1,25 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 // eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
-
 import useGetAuth from "../../Hooks/useGetAuth";
-import API from "../../Hooks/API";
 import toast from "react-hot-toast";
 
 const Login = () => {
   const [show, setShow] = useState(false);
   const [form, setForm] = useState({ email: "", password: "" });
-  const navigate = useNavigate();
   const { handleSignIn, user } = useGetAuth();
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
-
+  const location = useLocation();
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (!user?.emailVerified) return toast.error("Verified Your Gmail");
       await handleSignIn(form.email, form.password);
+      if (!user?.emailVerified) return toast.error("Verified Your Gmail");
       toast.success("Login successful");
-      navigate("/dashboard");
+      navigate(location?.state || "/");
     } catch (err) {
       alert(err.response?.data?.message || err.message);
     }

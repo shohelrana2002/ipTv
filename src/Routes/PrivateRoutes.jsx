@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { Navigate, useLocation } from "react-router";
 import useGetAuth from "../Hooks/useGetAuth";
 import axios from "axios";
 import toast from "react-hot-toast";
+import Loading from "../components/Loading/Loading";
 
 const PrivateRoutes = ({ children }) => {
   const { loading } = useGetAuth();
-  const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
   const [fetching, setFetching] = useState(true);
-
+  const location = useLocation();
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem("access-token");
         if (!token) {
-          navigate("/login"); // navigate inside useEffect
+          <Navigate to={"/login"} state={location?.pathname} replace />; // navigate inside useEffect
           return;
         }
 
@@ -27,21 +27,21 @@ const PrivateRoutes = ({ children }) => {
         const user = data[0];
         setUserData(user);
         if (!user || user.role !== "admin") {
-          navigate("/login");
+          ("/login");
         }
       } catch (err) {
         toast.error(err.message);
         localStorage.removeItem("access-token");
-        navigate("/login");
+        <Navigate to={"/login"} state={location?.pathname} replace />; // navigate inside useEffect
       } finally {
         setFetching(false);
       }
     };
 
     fetchUserData();
-  }, [navigate]);
+  }, [location]);
 
-  if (loading || fetching) return <div>Loading...</div>;
+  if (loading || fetching) return <Loading />;
 
   return userData && userData.role === "admin" ? <>{children}</> : null;
 };

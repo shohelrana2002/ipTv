@@ -1,7 +1,23 @@
 import React from "react";
 import { Link, NavLink } from "react-router";
+import useUserRole from "../../Hooks/useUserRole";
+import useGetAuth from "../../Hooks/useGetAuth";
+import toast from "react-hot-toast";
 
 const NavBar = () => {
+  const { role } = useUserRole();
+  const { handleSignOut } = useGetAuth();
+  const handleLogOut = async () => {
+    try {
+      localStorage.removeItem("access-token");
+      await handleSignOut();
+      toast.success("Logged out successfully!");
+    } catch (err) {
+      console.error(err);
+      toast.error("Logout failed!");
+    }
+  };
+
   const nav = (
     <>
       <li>
@@ -49,21 +65,25 @@ const NavBar = () => {
           About
         </NavLink>
       </li>
-      <li>
-        <NavLink
-          to="/contact"
-          className={({ isActive }) =>
-            `block px-4 py-2 rounded-md transition-colors duration-200 font-medium
+      {role && (
+        <>
+          <li>
+            <NavLink
+              to="/dashboard"
+              className={({ isActive }) =>
+                `block px-4 py-2 rounded-md transition-colors duration-200 font-medium
        ${
          isActive
            ? "bg-blue-600 text-white shadow-md"
            : "text-gray-700 mx-2 hover:bg-blue-100 hover:text-blue-700"
        }`
-          }
-        >
-          Contact
-        </NavLink>
-      </li>
+              }
+            >
+              Dashboard
+            </NavLink>
+          </li>
+        </>
+      )}
     </>
   );
   return (
@@ -102,7 +122,13 @@ const NavBar = () => {
           <ul className="menu menu-horizontal px-1">{nav}</ul>
         </div>
         <div className="navbar-end">
-          <a className="btn">Coming Soon !</a>
+          {role ? (
+            <button onClick={handleLogOut} className="btn btn-primary">
+              LogOut
+            </button>
+          ) : (
+            <button className="btn">Coming Soon !</button>
+          )}
         </div>
       </div>
     </div>

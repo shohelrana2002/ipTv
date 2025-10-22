@@ -9,6 +9,7 @@ import AllChannel from "../Pages/AllChannel/AllChannel";
 import Login from "../Pages/Login/Login";
 import Register from "../Pages/Register/Register";
 import PrivateRoutes from "./PrivateRoutes";
+import ChannelForm from "../Pages/ChannelForm/ChannelForm";
 
 export const router = createBrowserRouter([
   {
@@ -35,7 +36,19 @@ export const router = createBrowserRouter([
   },
   {
     path: "/dashBoard",
-    Component: Dashboard,
+    element: (
+      <PrivateRoutes>
+        <Dashboard />
+      </PrivateRoutes>
+    ),
+  },
+  {
+    path: "/dashBoard/channelAdd",
+    element: (
+      <PrivateRoutes>
+        <ChannelForm />
+      </PrivateRoutes>
+    ),
   },
   {
     path: "/dashBoard/allChannel",
