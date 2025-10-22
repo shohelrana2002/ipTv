@@ -178,13 +178,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import useApi from "../../Hooks/useApi";
 
 const AllChannel = () => {
   const [data, setData] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
-
+  const api = useApi();
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedChannel, setSelectedChannel] = useState(null);
   const [editData, setEditData] = useState({
@@ -223,13 +224,15 @@ const AllChannel = () => {
         cancelButtonColor: "#d33",
         confirmButtonText: "Yes, delete it!",
       });
-      const token = localStorage.getItem("token");
+
+      // const token = localStorage.getItem("access-token");
       if (result.isConfirmed) {
-        await axios.delete(`http://localhost:4000/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        await api.delete(`/${id}`);
+        // await axios.delete(`http://localhost:4000/${id}`, {
+        //   headers: {
+        //     Authorization: `Bearer ${token}`,
+        //   },
+        // });
         const updatedData = data.filter((ch) => ch._id !== id);
         setData(updatedData);
         setFiltered(updatedData);
