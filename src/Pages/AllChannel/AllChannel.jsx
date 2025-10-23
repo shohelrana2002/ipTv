@@ -1,7 +1,6 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import useApi from "../../Hooks/useApi";
 import toast from "react-hot-toast";
 import Loading from "../../components/Loading/Loading";
 import { useNavigate } from "react-router";
@@ -12,7 +11,7 @@ const AllChannel = () => {
   const [filtered, setFiltered] = useState([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
-  const api = useApi();
+  const [category, setCategory] = useState("ALL");
 
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedChannel, setSelectedChannel] = useState(null);
@@ -22,6 +21,8 @@ const AllChannel = () => {
     logo: "",
     url: "",
   });
+
+  const token = localStorage.getItem("access-token");
 
   // Fetch channels
   const fetchChannels = async () => {
@@ -54,7 +55,9 @@ const AllChannel = () => {
       });
 
       if (result.isConfirmed) {
-        await api.delete(`/${id}`);
+        await axios.delete(`http://localhost:4000/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         const updatedData = data.filter((ch) => ch._id !== id);
         setData(updatedData);
         setFiltered(updatedData);
@@ -79,7 +82,6 @@ const AllChannel = () => {
 
   // Update channel
   const handleUpdate = async () => {
-    const token = localStorage.getItem("access-token");
     try {
       const { _id } = selectedChannel;
       await axios.put(`http://localhost:4000/${_id}`, editData, {
@@ -97,48 +99,79 @@ const AllChannel = () => {
     }
   };
 
-  // Search
-  const handleSearch = () => {
-    const q = query.trim().toLowerCase();
-    if (!q) return setFiltered(data);
+  // Search + filter
+  const handleFilter = () => {
+    let result = [...data];
 
-    const result = data.filter(
-      (ch) =>
-        ch.name.toLowerCase().includes(q) ||
-        (ch.group && ch.group.toLowerCase().includes(q))
-    );
+    // Filter by search query
+    const q = query.trim().toLowerCase();
+    if (q) {
+      result = result.filter(
+        (ch) =>
+          ch.name.toLowerCase().includes(q) ||
+          (ch.group && ch.group.toLowerCase().includes(q))
+      );
+    }
+
+    // Filter by category
+    if (category !== "ALL") {
+      result = result.filter(
+        (ch) => ch.group && ch.group.toLowerCase() === category.toLowerCase()
+      );
+    }
+
     setFiltered(result);
   };
 
-  // Reset search
+  // Reset filters
   const handleReset = () => {
     setQuery("");
+    setCategory("ALL");
     setFiltered(data);
   };
 
   if (loading) return <Loading />;
 
+  // Extract unique categories for dropdown
+  const categories = [
+    "ALL",
+    ...new Set(data.map((ch) => ch.group).filter(Boolean)),
+  ];
+
   return (
-    <div className=" bg-base-300">
-      <div className="max-w-7xl container mx-auto  px-4">
+    <div className="bg-base-300 min-h-screen">
+      <div className="max-w-7xl container mx-auto px-4 py-6">
         <h2 className="text-3xl font-bold mb-6 text-center">
           All Channels ({filtered.length})
         </h2>
 
-        {/* Search */}
+        {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-2 mb-6 items-center">
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search by name or group..."
-            className="p-2 border rounded w-full sm:w-1/2"
+            placeholder="Search by name..."
+            className="p-2 border rounded w-full sm:w-1/3"
           />
+
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="p-2 border rounded w-full sm:w-1/4"
+          >
+            {categories.map((cat, i) => (
+              <option key={i} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+
           <button
-            onClick={handleSearch}
+            onClick={handleFilter}
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
           >
-            Search
+            Apply
           </button>
           <button
             onClick={handleReset}
@@ -146,13 +179,16 @@ const AllChannel = () => {
           >
             Reset
           </button>
-          <button className="btn btn-info" onClick={() => navigate(-1)}>
-            Back to Page
+          <button
+            className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition"
+            onClick={() => navigate(-1)}
+          >
+            Back
           </button>
         </div>
 
         {/* Table */}
-        <div className="overflow-x-auto shadow rounded-lg">
+        <div className="overflow-x-auto shadow rounded-lg bg-white">
           <table className="min-w-full table-auto border-collapse">
             <thead className="bg-gray-100">
               <tr>
@@ -166,7 +202,7 @@ const AllChannel = () => {
             <tbody>
               {filtered.length ? (
                 filtered.map((ch, index) => (
-                  <tr key={ch._id} className="hover:bg-gray-50">
+                  <tr key={ch._id} className="hover:bg-gray-200 cursor-pointer">
                     <td className="border px-4 py-2 text-center">
                       {index + 1}
                     </td>

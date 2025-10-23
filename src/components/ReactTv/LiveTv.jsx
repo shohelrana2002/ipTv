@@ -3,12 +3,11 @@ import Hls from "hls.js";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 
-// ✅ Helper
 const normalizeGroup = (g) =>
   g ? g.toString().trim().toUpperCase() : "OTHERS";
 
-// ✅ HLS Player Hook
-function useHlsPlayer(src, onLevels) {
+// HLS Player Hook
+const useHlsPlayer = (src, onLevels) => {
   const videoRef = useRef(null);
   const hlsRef = useRef(null);
 
@@ -45,14 +44,41 @@ function useHlsPlayer(src, onLevels) {
   }, [src, onLevels]);
 
   return { videoRef, hlsRef };
-}
+};
 
-// ✅ Player Component
-function Player({ src, poster }) {
+// Player Component
+const Player = ({ src, poster, channel }) => {
+  const { name } = channel || {};
   const [levels, setLevels] = useState([]);
   const [currentLevel, setCurrentLevel] = useState(-1);
   const { videoRef, hlsRef } = useHlsPlayer(src, setLevels);
+  // test srt her
+  const [watchTime, setWatchTime] = useState(0);
+  useEffect(() => {
+    if (!channel) return null;
+    const video = videoRef.current;
+    if (!video) return;
+    const interval = setInterval(async () => {
+      if (!video.paused) {
+        const seconds = 180;
+        setWatchTime((prev) => prev + seconds);
+        try {
+          await axios.post("http://localhost:4000/watch", {
+            channelUrl: src,
+            channelName: name,
+            seconds,
+          });
+        } catch (err) {
+          toast.error(err);
+        }
+      }
+    }, 180000);
 
+    return () => clearInterval(interval); // cleanup
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [src]);
+
+  // test end
   const changeQuality = (height) => {
     if (!hlsRef.current) return;
 
@@ -76,9 +102,9 @@ function Player({ src, poster }) {
         playsInline
         autoPlay
         poster={poster}
-        className="w-full h-[220px] sm:h-[320px] md:h-[400px] lg:h-[480px] object-cover bg-black"
+        className="w-full h-[220px] sm:h-80 md:h-[400px] lg:h-[480px] object-cover bg-black"
       />
-
+      //test <p>Watch time:{watchTime}</p>
       {/* Quality Selector */}
       {levels.length > 0 && (
         <div className="absolute top-3 right-3 bg-black/70 text-white text-xs rounded px-2 py-1 z-10">
@@ -98,10 +124,10 @@ function Player({ src, poster }) {
       )}
     </div>
   );
-}
+};
 
 // ✅ Channel Card
-function ChannelCard({ ch, onPlay, active }) {
+const ChannelCard = ({ ch, onPlay, active }) => {
   return (
     <div
       className={`flex flex-col items-center p-2 rounded-lg shadow-sm hover:shadow-md transition cursor-pointer border ${
@@ -125,16 +151,14 @@ function ChannelCard({ ch, onPlay, active }) {
       <div className="w-full text-xs text-gray-500 mt-1">{ch.group}</div>
     </div>
   );
-}
+};
 
-// ✅ Spinner Component
 const Spinner = () => (
   <div className="flex justify-center items-center py-10">
     <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
   </div>
 );
 
-// ✅ Main App
 const LiveTVApp = () => {
   const [channels, setChannels] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -228,14 +252,19 @@ const LiveTVApp = () => {
         ) : (
           <main className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <section className="md:col-span-2 space-y-4">
-              {current && <Player src={current?.url} poster={current?.logo} />}
-
+              {current && (
+                <Player
+                  src={current?.url}
+                  poster={current?.logo}
+                  channel={current}
+                />
+              )}
               <div className="flex flex-wrap gap-2 items-center mt-2">
                 {groups.map((g) => (
                   <button
                     key={g}
                     onClick={() => setActiveGroup(g)}
-                    className={`px-3 py-1 rounded-full border transition ${
+                    className={`px-3 py-1 cursor-pointer rounded-full border transition ${
                       activeGroup === g
                         ? "bg-blue-600 text-white border-blue-600"
                         : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
@@ -245,7 +274,6 @@ const LiveTVApp = () => {
                   </button>
                 ))}
               </div>
-
               <div>
                 <h2 className="text-lg font-semibold mb-2 mt-4">
                   Channels ({filtered.length})

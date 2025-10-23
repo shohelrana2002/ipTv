@@ -30,7 +30,7 @@ const Register = () => {
       await axios.post("http://localhost:4000/users", {
         name: form.name,
         email: form.email,
-        role: form.role,
+        role: "user",
       });
       navigate("/login");
     } catch (err) {

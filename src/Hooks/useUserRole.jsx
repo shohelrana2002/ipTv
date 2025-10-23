@@ -1,6 +1,6 @@
-// useUserRole.js
 import { useState, useEffect } from "react";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const useUserRole = () => {
   const [user, setUser] = useState(null);
@@ -14,15 +14,13 @@ const useUserRole = () => {
         setLoading(false);
         return;
       }
-
       try {
         const { data } = await axios.get("http://localhost:4000/users", {
           headers: { Authorization: `Bearer ${token}` },
         });
-
         setUser(Array.isArray(data) ? data[0] : data);
       } catch (err) {
-        console.error("Error fetching user:", err);
+        toast.error(err.message);
         setUser(null);
       } finally {
         setLoading(false);

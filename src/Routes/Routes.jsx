@@ -11,6 +11,8 @@ import Register from "../Pages/Register/Register";
 import PrivateRoutes from "./PrivateRoutes";
 import ChannelForm from "../Pages/ChannelForm/ChannelForm";
 import AllUsers from "../Pages/AllUsers/AllUsers";
+import NotFound from "../components/NotFound/NotFound";
+import WatchTime from "../Pages/WatchTime/WatchTime";
 
 export const router = createBrowserRouter([
   {
@@ -67,6 +69,10 @@ export const router = createBrowserRouter([
       </PrivateRoutes>
     ),
   },
+  {
+    path: "/dashboard/watchTime",
+    Component: WatchTime,
+  },
 
   {
     path: "/login",
@@ -75,5 +81,9 @@ export const router = createBrowserRouter([
   {
     path: "/register",
     Component: Register,
+  },
+  {
+    path: "*",
+    Component: NotFound,
   },
 ]);

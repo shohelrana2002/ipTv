@@ -8,7 +8,7 @@ import toast from "react-hot-toast";
 const Login = () => {
   const [show, setShow] = useState(false);
   const [form, setForm] = useState({ email: "", password: "" });
-  const { handleSignIn, user } = useGetAuth();
+  const { handleSignIn, resetPassword } = useGetAuth();
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
   const location = useLocation();
@@ -18,8 +18,11 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await handleSignIn(form.email, form.password);
-      if (!user?.emailVerified) return toast.error("Verified Your Gmail");
+      const loggedUser = await handleSignIn(form.email, form.password);
+      if (!loggedUser.user?.emailVerified) {
+        toast.error("Please verify your email first!");
+        return;
+      }
       toast.success("Login successful");
       navigate(location?.state || "/");
     } catch (err) {
@@ -28,7 +31,17 @@ const Login = () => {
       setLoading(false);
     }
   };
-
+  const handleForgetPassword = async () => {
+    if (!form?.email) {
+      toast.error("plz enter Your Gmail");
+    }
+    try {
+      await resetPassword(form.email);
+      toast.success("Password Rest Link Send Your emil Plz check it");
+    } catch (err) {
+      toast.error("plz Valid email pr tray again", err.message);
+    }
+  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-500 via-indigo-600 to-purple-600 px-4">
       <motion.div
@@ -89,6 +102,12 @@ const Login = () => {
           >
             {loading ? "Loading..." : " Login"}
           </motion.button>
+          <p
+            onClick={handleForgetPassword}
+            className="hover:underline cursor-pointer text-green-800"
+          >
+            Forget Password ?
+          </p>
         </form>
 
         <motion.p

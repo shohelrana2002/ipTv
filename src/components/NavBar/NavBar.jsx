@@ -11,10 +11,10 @@ const NavBar = () => {
     try {
       localStorage.removeItem("access-token");
       await handleSignOut();
+      navigate("/login");
       toast.success("Logged out successfully!");
-      navigate("/login  ");
     } catch (err) {
-      toast.error("Logout failed!", err);
+      toast.error("Logout failed!", err.message);
     }
   };
 
@@ -114,8 +114,8 @@ const NavBar = () => {
               {nav}
             </ul>
           </div>
-          <Link to="/" className="btn btn-ghost text-xl">
-            SH Tv
+          <Link to="/" className="btn font-bold btn-ghost text-xl">
+            SH
           </Link>
         </div>
         <div className="navbar-center hidden lg:flex">

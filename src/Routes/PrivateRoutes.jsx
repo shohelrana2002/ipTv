@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import Loading from "../components/Loading/Loading";
 
 const PrivateRoutes = ({ children }) => {
-  const { loading } = useGetAuth();
+  const { loading, setLoading } = useGetAuth();
   const [userData, setUserData] = useState(null);
   const [fetching, setFetching] = useState(true);
   const location = useLocation();
@@ -34,6 +34,7 @@ const PrivateRoutes = ({ children }) => {
         localStorage.removeItem("access-token");
         <Navigate to={"/login"} state={location?.pathname} replace />; // navigate inside useEffect
       } finally {
+        setLoading(false);
         setFetching(false);
       }
     };
