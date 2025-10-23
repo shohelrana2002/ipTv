@@ -50,18 +50,20 @@ const ChannelForm = ({ onAdded }) => {
       group: data.group || "OTHERS",
       logo: uploadedLogo,
     };
-
+    const token = localStorage.getItem("access-token");
     try {
       const res = await axios.post("http://localhost:4000/", channelData, {
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       });
       toast.success("✅ Channel added successfully!", { id: toastId });
       reset();
       setPreview(null);
       if (onAdded) onAdded(res.data);
     } catch (err) {
-      console.error(err);
-      toast.error("Failed to save channel", { id: toastId });
+      toast.error("Failed to save channel", { id: toastId }, err.message);
     }
   };
 

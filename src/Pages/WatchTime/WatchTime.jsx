@@ -22,6 +22,7 @@ const WatchTime = () => {
     };
     fetchWatchTime();
   }, []);
+  console.log(watch);
   return (
     <div>
       {watch.map((watchT) => (
