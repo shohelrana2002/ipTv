@@ -12,9 +12,11 @@ const Login = () => {
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
   const location = useLocation();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       await handleSignIn(form.email, form.password);
       if (!user?.emailVerified) return toast.error("Verified Your Gmail");
@@ -22,6 +24,8 @@ const Login = () => {
       navigate(location?.state || "/");
     } catch (err) {
       alert(err.response?.data?.message || err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -83,7 +87,7 @@ const Login = () => {
             whileTap={{ scale: 0.95 }}
             className="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-semibold shadow-lg transition-all duration-200"
           >
-            Login
+            {loading ? "Loading..." : " Login"}
           </motion.button>
         </form>
 

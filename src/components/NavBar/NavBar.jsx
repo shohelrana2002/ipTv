@@ -1,5 +1,4 @@
-import React from "react";
-import { Link, NavLink } from "react-router";
+import { Link, NavLink, useNavigate } from "react-router";
 import useUserRole from "../../Hooks/useUserRole";
 import useGetAuth from "../../Hooks/useGetAuth";
 import toast from "react-hot-toast";
@@ -7,14 +6,15 @@ import toast from "react-hot-toast";
 const NavBar = () => {
   const { role } = useUserRole();
   const { handleSignOut } = useGetAuth();
+  const navigate = useNavigate();
   const handleLogOut = async () => {
     try {
       localStorage.removeItem("access-token");
       await handleSignOut();
       toast.success("Logged out successfully!");
+      navigate("/login  ");
     } catch (err) {
-      console.error(err);
-      toast.error("Logout failed!");
+      toast.error("Logout failed!", err);
     }
   };
 
