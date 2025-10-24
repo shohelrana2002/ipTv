@@ -41,6 +41,8 @@ const WatchTime = () => {
     ...item,
     minutes: item.totalSeconds / 60,
   }));
+  const total = chartData.reduce((acc, item) => acc + item?.minutes, 0);
+
   const COLORS = [
     "#0088FE",
     "#00C49F",
@@ -55,10 +57,12 @@ const WatchTime = () => {
   return (
     <>
       <NavBar />
-      <div className="flex justify-center font-semibold items-center mt-3 ">
-        <button onClick={() => navigate(-1)} className="btn btn-accent">
-          Back To Page
-        </button>
+
+      <div className="flex justify-center items-center">
+        <h2 className="text-2xl font-semibold mt-2">
+          Total Watch time : <span className="text-green-600">{total}</span>{" "}
+          minutes
+        </h2>
       </div>
       <div className="bg-base-200" style={{ width: "100%", height: 400 }}>
         <ResponsiveContainer width="100%" height="100%">
@@ -84,6 +88,11 @@ const WatchTime = () => {
             <Legend />
           </PieChart>
         </ResponsiveContainer>
+        <div className="flex justify-center font-semibold items-center mt-3 ">
+          <button onClick={() => navigate(-1)} className="btn btn-accent">
+            Back To Page
+          </button>
+        </div>
       </div>
     </>
   );
