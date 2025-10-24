@@ -7,7 +7,7 @@ const NotFound = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 text-white px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center g-linear-to-br from-indigo-600 via-purple-600 to-pink-500 text-white px-4">
       {/* Animated 404 Text */}
       <motion.h1
         initial={{ scale: 0.5, opacity: 0 }}
@@ -54,7 +54,7 @@ const NotFound = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.15 }}
         transition={{ delay: 1 }}
-        className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0]"
+        className="absolute bottom-0 left-0 w-full overflow-hidden leading-0"
       >
         <svg
           className="relative block w-[calc(200%+1.3px)] h-[120px]"

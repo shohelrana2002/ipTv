@@ -5,7 +5,7 @@ const About = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-500 to-green-400 text-white py-20 px-6 text-center">
+      <section className="bg-linear-to-r from-blue-500 to-green-400 text-white py-20 px-6 text-center">
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 animate-pulse">
           About Us
         </h1>
