@@ -31,7 +31,7 @@ const AllChannel = () => {
       setData(res.data);
       setFiltered(res.data);
     } catch (err) {
-      toast.error(err.message);
+      toast.error(err?.message);
     } finally {
       setLoading(false);
     }
@@ -64,7 +64,7 @@ const AllChannel = () => {
         Swal.fire("Deleted!", "Channel has been deleted.", "success");
       }
     } catch (err) {
-      Swal.fire("Error!", `Failed to delete channel: ${err.message}`, "error");
+      Swal.fire("Error!", `Failed to delete channel: ${err?.message}`, "error");
     }
   };
 

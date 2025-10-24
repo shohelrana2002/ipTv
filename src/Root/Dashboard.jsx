@@ -33,6 +33,12 @@ const Dashboard = () => {
           >
             All Users
           </button>
+          <button
+            onClick={() => navigate("/dashBoard/watchTime")}
+            className="px-8 py-6 bg-white text-purple-600 font-semibold rounded-lg shadow-lg hover:bg-purple-50 transition transform hover:scale-105"
+          >
+            Watch Time
+          </button>
         </div>
 
         <p className="mt-10 text-white text-lg opacity-80">

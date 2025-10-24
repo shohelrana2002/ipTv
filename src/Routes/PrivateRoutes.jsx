@@ -30,7 +30,7 @@ const PrivateRoutes = ({ children }) => {
           ("/login");
         }
       } catch (err) {
-        toast.error(err.message);
+        toast.error(err?.message);
         localStorage.removeItem("access-token");
         <Navigate to={"/login"} state={location?.pathname} replace />; // navigate inside useEffect
       } finally {
@@ -40,6 +40,7 @@ const PrivateRoutes = ({ children }) => {
     };
 
     fetchUserData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
   if (loading || fetching) return <Loading />;

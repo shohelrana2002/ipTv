@@ -26,7 +26,7 @@ const Login = () => {
       toast.success("Login successful");
       navigate(location?.state || "/");
     } catch (err) {
-      alert(err.response?.data?.message || err.message);
+      alert(err.response?.data?.message || err?.message);
     } finally {
       setLoading(false);
     }
@@ -39,7 +39,7 @@ const Login = () => {
       await resetPassword(form.email);
       toast.success("Password Rest Link Send Your emil Plz check it");
     } catch (err) {
-      toast.error("plz Valid email pr tray again", err.message);
+      toast.error("plz Valid email pr tray again", err?.message);
     }
   };
   return (

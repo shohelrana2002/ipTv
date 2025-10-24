@@ -88,7 +88,7 @@ const AllUsers = () => {
       }
     } catch (err) {
       if (err.response?.data?.message) {
-        toast.error(err.response.data.message);
+        toast.error(err?.response?.data?.message);
       } else {
         toast.error("Something went wrong!");
       }

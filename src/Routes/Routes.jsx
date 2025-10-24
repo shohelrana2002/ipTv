@@ -71,7 +71,11 @@ export const router = createBrowserRouter([
   },
   {
     path: "/dashboard/watchTime",
-    Component: <PrivateRoutes>WatchTime</PrivateRoutes>,
+    element: (
+      <PrivateRoutes>
+        <WatchTime />
+      </PrivateRoutes>
+    ),
   },
 
   {

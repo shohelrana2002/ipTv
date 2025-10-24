@@ -69,7 +69,7 @@ const Player = ({ src, poster, channel }) => {
             seconds,
           });
         } catch (err) {
-          toast.error(err);
+          toast.error(err?.message);
         }
       }
     }, 180000);
@@ -170,8 +170,7 @@ const LiveTVApp = () => {
         const { data } = await axios.get("http://localhost:4000");
         setChannels(data);
       } catch (err) {
-        toast.error("Failed to load channels!");
-        console.error(err);
+        toast.error("Failed to load channels!", err?.message);
       } finally {
         setLoading(false);
       }

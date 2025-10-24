@@ -20,7 +20,7 @@ const useUserRole = () => {
         });
         setUser(Array.isArray(data) ? data[0] : data);
       } catch (err) {
-        toast.error(err.message);
+        toast.error(err?.message);
         setUser(null);
       } finally {
         setLoading(false);

@@ -39,7 +39,7 @@ const ChannelForm = ({ onAdded }) => {
           return;
         }
       } catch (err) {
-        toast.error("Image upload error!", { id: toastId }, err);
+        toast.error("Image upload error!", { id: toastId }, err?.message);
         return;
       }
     }
@@ -63,7 +63,7 @@ const ChannelForm = ({ onAdded }) => {
       setPreview(null);
       if (onAdded) onAdded(res.data);
     } catch (err) {
-      toast.error("Failed to save channel", { id: toastId }, err.message);
+      toast.error("Failed to save channel", { id: toastId }, err?.message);
     }
   };
 
