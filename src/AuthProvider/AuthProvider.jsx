@@ -67,15 +67,15 @@ const AuthProvider = ({ children }) => {
   // Listen Auth State
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+      setLoading(true);
       if (currentUser) {
         setUser(currentUser);
-
         setLoading(true);
-
         try {
           // Fetch JWT from backend
           const { data } = await axios.post(
-            "https://ip-backend-bzakicfac-md-shohel-ranas-projects-06915b1a.vercel.app/jwt",
+            "https://ip-backend-five.vercel.app/jwt",
             {
               email: currentUser.email,
             }

@@ -63,14 +63,11 @@ const Player = ({ src, poster, channel }) => {
         const seconds = 180;
         setWatchTime((prev) => prev + seconds);
         try {
-          await axios.post(
-            "https://ip-backend-bzakicfac-md-shohel-ranas-projects-06915b1a.vercel.app/watch",
-            {
-              channelUrl: src,
-              channelName: name,
-              seconds,
-            }
-          );
+          await axios.post("https://ip-backend-five.vercel.app/watch", {
+            channelUrl: src,
+            channelName: name,
+            seconds,
+          });
         } catch (err) {
           toast.error(err?.message);
         }
@@ -167,12 +164,11 @@ const LiveTVApp = () => {
   const [loading, setLoading] = useState(true);
 
   // 🔹 Load from Server
+
   useEffect(() => {
     const fetchChannels = async () => {
       try {
-        const { data } = await axios.get(
-          "https://ip-backend-bzakicfac-md-shohel-ranas-projects-06915b1a.vercel.app"
-        );
+        const { data } = await axios.get("https://ip-backend-five.vercel.app");
         setChannels(data);
       } catch (err) {
         toast.error("Failed to load channels!", err?.message);

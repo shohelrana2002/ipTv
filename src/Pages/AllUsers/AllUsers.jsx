@@ -16,7 +16,7 @@ const AllUsers = () => {
     const fetchUsers = async () => {
       try {
         const { data } = await axios.get(
-          "https://ip-backend-bzakicfac-md-shohel-ranas-projects-06915b1a.vercel.app/users",
+          "https://ip-backend-five.vercel.app/users",
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -38,7 +38,7 @@ const AllUsers = () => {
 
     try {
       const { data } = await axios.patch(
-        `https://ip-backend-bzakicfac-md-shohel-ranas-projects-06915b1a.vercel.app/dashBoard/allUsers/${email}`,
+        `https://ip-backend-five.vercel.app/dashBoard/allUsers/${email}`,
         { role: newRole },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -70,7 +70,7 @@ const AllUsers = () => {
 
       if (result.isConfirmed) {
         const { data } = await axios.delete(
-          `https://ip-backend-bzakicfac-md-shohel-ranas-projects-06915b1a.vercel.app/dashBoard/allUsers/${id}`,
+          `https://ip-backend-five.vercel.app/dashBoard/allUsers/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

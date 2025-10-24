@@ -6,8 +6,7 @@ const useApi = () => {
   const navigate = useNavigate();
 
   const api = axios.create({
-    baseURL:
-      "https://ip-backend-bzakicfac-md-shohel-ranas-projects-06915b1a.vercel.app",
+    baseURL: "https://ip-backend-five.vercel.app",
   });
 
   api.interceptors.request.use(

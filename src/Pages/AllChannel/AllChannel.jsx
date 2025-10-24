@@ -27,9 +27,7 @@ const AllChannel = () => {
   // Fetch channels
   const fetchChannels = async () => {
     try {
-      const res = await axios.get(
-        "https://ip-backend-bzakicfac-md-shohel-ranas-projects-06915b1a.vercel.app/"
-      );
+      const res = await axios.get("https://ip-backend-five.vercel.app/");
       setData(res.data);
       setFiltered(res.data);
     } catch (err) {
@@ -57,12 +55,9 @@ const AllChannel = () => {
       });
 
       if (result.isConfirmed) {
-        await axios.delete(
-          `https://ip-backend-bzakicfac-md-shohel-ranas-projects-06915b1a.vercel.app/${id}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        await axios.delete(`https://ip-backend-five.vercel.app/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         const updatedData = data.filter((ch) => ch._id !== id);
         setData(updatedData);
         setFiltered(updatedData);
@@ -89,13 +84,9 @@ const AllChannel = () => {
   const handleUpdate = async () => {
     try {
       const { _id } = selectedChannel;
-      await axios.put(
-        `https://ip-backend-bzakicfac-md-shohel-ranas-projects-06915b1a.vercel.app/${_id}`,
-        editData,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      await axios.put(`https://ip-backend-five.vercel.app/${_id}`, editData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       const updatedData = data.map((ch) =>
         ch._id === _id ? { ...ch, ...editData } : ch
       );

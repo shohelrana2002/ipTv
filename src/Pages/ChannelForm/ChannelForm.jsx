@@ -53,7 +53,7 @@ const ChannelForm = ({ onAdded }) => {
     const token = localStorage.getItem("access-token");
     try {
       const res = await axios.post(
-        "https://ip-backend-bzakicfac-md-shohel-ranas-projects-06915b1a.vercel.app/",
+        "https://ip-backend-five.vercel.app/",
         channelData,
         {
           headers: {

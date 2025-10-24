@@ -1,8 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL:
-    "https://ip-backend-bzakicfac-md-shohel-ranas-projects-06915b1a.vercel.app",
+  baseURL: "https://ip-backend-five.vercel.app",
 });
 
 // Add JWT token to request headers if exists
