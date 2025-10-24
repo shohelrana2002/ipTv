@@ -74,9 +74,12 @@ const AuthProvider = ({ children }) => {
 
         try {
           // Fetch JWT from backend
-          const { data } = await axios.post("http://localhost:4000/jwt", {
-            email: currentUser.email,
-          });
+          const { data } = await axios.post(
+            "https://ip-backend-bzakicfac-md-shohel-ranas-projects-06915b1a.vercel.app/jwt",
+            {
+              email: currentUser.email,
+            }
+          );
           localStorage.setItem("access-token", data.token);
         } catch (err) {
           console.error("JWT fetch error:", err);

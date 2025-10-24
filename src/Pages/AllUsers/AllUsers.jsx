@@ -15,9 +15,12 @@ const AllUsers = () => {
     setLoading(true);
     const fetchUsers = async () => {
       try {
-        const { data } = await axios.get("http://localhost:4000/users", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const { data } = await axios.get(
+          "https://ip-backend-bzakicfac-md-shohel-ranas-projects-06915b1a.vercel.app/users",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         setUsers(data);
       } catch (err) {
         console.error(err);
@@ -31,12 +34,11 @@ const AllUsers = () => {
 
   // Handle role change
   const handleRoleChange = async (email, newRole) => {
-    setLoading(true);
     if (!token) return toast.error("No token found. Please login.");
 
     try {
       const { data } = await axios.patch(
-        `http://localhost:4000/dashBoard/allUsers/${email}`,
+        `https://ip-backend-bzakicfac-md-shohel-ranas-projects-06915b1a.vercel.app/dashBoard/allUsers/${email}`,
         { role: newRole },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -51,13 +53,10 @@ const AllUsers = () => {
       }
     } catch (err) {
       toast.error("Role update failed!", err?.message);
-    } finally {
-      setLoading(false);
     }
   };
   // delete user
   const handleDeleteUser = async (id) => {
-    setLoading(true);
     try {
       const result = await Swal.fire({
         title: "Are you sure?",
@@ -71,10 +70,10 @@ const AllUsers = () => {
 
       if (result.isConfirmed) {
         const { data } = await axios.delete(
-          `http://localhost:4000/dashBoard/allUsers/${id}`,
+          `https://ip-backend-bzakicfac-md-shohel-ranas-projects-06915b1a.vercel.app/dashBoard/allUsers/${id}`,
           {
             headers: {
-              Authorization: `Bearer ${token}`, // token অবশ্যই পাঠাতে হবে
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -83,7 +82,6 @@ const AllUsers = () => {
           toast.success(data.message);
         }
 
-        // যদি ডিলিট হওয়ার পরে ইউজার লিস্ট refresh করতে চাও:
         setUsers((prev) => prev.filter((user) => user._id !== id));
       }
     } catch (err) {
@@ -92,8 +90,6 @@ const AllUsers = () => {
       } else {
         toast.error("Something went wrong!");
       }
-    } finally {
-      setLoading(false);
     }
   };
   if (loading) return <Loading />;

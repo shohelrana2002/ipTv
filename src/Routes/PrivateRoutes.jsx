@@ -19,9 +19,12 @@ const PrivateRoutes = ({ children }) => {
           return;
         }
 
-        const { data } = await axios.get("http://localhost:4000/users", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const { data } = await axios.get(
+          "https://ip-backend-bzakicfac-md-shohel-ranas-projects-06915b1a.vercel.app/users",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
         // assuming first user is the logged in user
         const user = data[0];

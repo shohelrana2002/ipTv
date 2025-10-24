@@ -27,11 +27,14 @@ const Register = () => {
       await handleSignUp(form.email, form.password);
       await handleSendEmailVerification();
       toast.success("Verification mail sent! Please check your Gmail 📧");
-      await axios.post("http://localhost:4000/users", {
-        name: form.name,
-        email: form.email,
-        role: "user",
-      });
+      await axios.post(
+        "https://ip-backend-bzakicfac-md-shohel-ranas-projects-06915b1a.vercel.app/users",
+        {
+          name: form.name,
+          email: form.email,
+          role: "user",
+        }
+      );
       navigate("/login");
     } catch (err) {
       toast.error(err.response?.data?.message || err?.message);

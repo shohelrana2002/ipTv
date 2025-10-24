@@ -35,6 +35,7 @@ const WatchTime = () => {
       }
     };
     fetchWatchTime();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const chartData = watch.map((item) => ({
@@ -71,6 +72,7 @@ const WatchTime = () => {
               data={chartData}
               dataKey="minutes"
               nameKey={"channelName"}
+              cursor="pointer"
               cx="50%"
               cy="50%"
               outerRadius={120}

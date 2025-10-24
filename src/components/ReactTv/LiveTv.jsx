@@ -63,11 +63,14 @@ const Player = ({ src, poster, channel }) => {
         const seconds = 180;
         setWatchTime((prev) => prev + seconds);
         try {
-          await axios.post("http://localhost:4000/watch", {
-            channelUrl: src,
-            channelName: name,
-            seconds,
-          });
+          await axios.post(
+            "https://ip-backend-bzakicfac-md-shohel-ranas-projects-06915b1a.vercel.app/watch",
+            {
+              channelUrl: src,
+              channelName: name,
+              seconds,
+            }
+          );
         } catch (err) {
           toast.error(err?.message);
         }
@@ -167,7 +170,9 @@ const LiveTVApp = () => {
   useEffect(() => {
     const fetchChannels = async () => {
       try {
-        const { data } = await axios.get("http://localhost:4000");
+        const { data } = await axios.get(
+          "https://ip-backend-bzakicfac-md-shohel-ranas-projects-06915b1a.vercel.app"
+        );
         setChannels(data);
       } catch (err) {
         toast.error("Failed to load channels!", err?.message);
