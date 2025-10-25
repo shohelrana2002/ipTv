@@ -28,6 +28,10 @@ export const router = createBrowserRouter([
         Component: LiveTVApp,
       },
       {
+        path: "/liveTv/:slug",
+        Component: LiveTVApp,
+      },
+      {
         path: "/about",
         Component: About,
       },

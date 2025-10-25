@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import Hls from "hls.js";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
+import { useNavigate, useParams } from "react-router";
 
 const normalizeGroup = (g) =>
   g ? g.toString().trim().toUpperCase() : "OTHERS";
@@ -126,7 +127,7 @@ const Player = ({ src, poster, channel }) => {
   );
 };
 
-// ✅ Channel Card
+// Channel Card
 const ChannelCard = ({ ch, onPlay, active }) => {
   return (
     <div
@@ -162,8 +163,17 @@ const Spinner = () => (
 const LiveTVApp = () => {
   const [channels, setChannels] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // 🔹 Load from Server
+  // name show in path name
+  const { slug } = useParams();
+  const navigate = useNavigate();
+  const handlePlay = (ch) => {
+    setCurrent(ch);
+    const slug = ch.name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+    navigate(`/liveTv/${slug}`);
+  };
 
   useEffect(() => {
     const fetchChannels = async () => {
@@ -220,8 +230,19 @@ const LiveTVApp = () => {
   }, [sanitized, query, activeGroup]);
 
   useEffect(() => {
-    if (!current && filtered.length) setCurrent(filtered[0]);
-  }, [filtered, current]);
+    if (slug && sanitized.length) {
+      const found = sanitized.find(
+        (c) =>
+          c.name
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/(^-|-$)/g, "") === slug
+      );
+      if (found) setCurrent(found);
+    } else if (!current && filtered.length) {
+      setCurrent(filtered[0]);
+    }
+  }, [slug, sanitized, filtered, current]);
 
   return (
     <div className="min-h-screen p-4 bg-gray-50">
@@ -284,7 +305,7 @@ const LiveTVApp = () => {
                       key={index}
                       ch={ch}
                       active={current?.url === ch.url}
-                      onPlay={setCurrent}
+                      onPlay={handlePlay}
                     />
                   ))}
                 </div>
