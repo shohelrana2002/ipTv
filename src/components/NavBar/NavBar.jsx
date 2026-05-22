@@ -17,7 +17,21 @@ const NavBar = () => {
       toast.error("Logout failed!", err?.message);
     }
   };
-  if (loading) return;
+  <div className="navbar-end">
+    {loading ? (
+      <div className="flex items-center gap-3">
+        <span className="loading loading-spinner loading-sm"></span>
+
+        <div className="h-10 w-24 rounded-lg bg-base-300 animate-pulse"></div>
+      </div>
+    ) : role ? (
+      <button onClick={handleLogOut} className="btn btn-primary">
+        LogOut
+      </button>
+    ) : (
+      <button className="btn">Coming Soon !</button>
+    )}
+  </div>;
   const nav = (
     <>
       <li>
@@ -66,7 +80,30 @@ const NavBar = () => {
           About
         </NavLink>
       </li>
-      {role && (
+      {loading ? (
+        <li>
+          <div className="h-8 w-24 rounded-lg bg-base-300 animate-pulse"></div>
+        </li>
+      ) : (
+        role && (
+          <li>
+            <NavLink
+              to="/dashboard"
+              className={({ isActive }) =>
+                `block px-4 py-2 rounded-md transition-colors duration-200 font-medium
+            ${
+              isActive
+                ? "bg-blue-600 font-semibold text-white shadow-md"
+                : "text-gray-700 mx-2 font-semibold hover:bg-blue-100 hover:text-blue-700"
+            }`
+              }
+            >
+              Dashboard
+            </NavLink>
+          </li>
+        )
+      )}
+      {/* {role && (
         <>
           <li>
             <NavLink
@@ -84,7 +121,7 @@ const NavBar = () => {
             </NavLink>
           </li>
         </>
-      )}
+      )} */}
     </>
   );
   return (
