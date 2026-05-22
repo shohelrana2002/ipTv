@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @plugin "daisyui";
-@import url("https://fonts.googleapis.com/css2?family=Playwrite+DE+SAS:wght@100..400&display=swap");
-/* * {
-  font-family: "Playwrite DE SAS", cursive;
-} */
+
+@import url("https://fonts.googleapis.com/css2?family=Special+Gothic:wght@400..700&display=swap");
+
+* {
+  font-family: "Special Gothic", sans-serif;
+}

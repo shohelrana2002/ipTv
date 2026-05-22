@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import Hls from "hls.js";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
+import { useNavigate, useParams } from "react-router";
 
 const normalizeGroup = (g) =>
   g ? g.toString().trim().toUpperCase() : "OTHERS";
@@ -63,7 +64,7 @@ const Player = ({ src, poster, channel }) => {
         const seconds = 180;
         setWatchTime((prev) => prev + seconds);
         try {
-          await axios.post("http://localhost:4000/watch", {
+          await axios.post("https://iptv-backend-bcd1.onrender.com/watch", {
             channelUrl: src,
             channelName: name,
             seconds,
@@ -106,17 +107,21 @@ const Player = ({ src, poster, channel }) => {
       />
       //test <p>Watch time:{watchTime}</p>
       {/* Quality Selector */}
-      {levels.length > 0 && (
+      {levels?.length > 0 && (
         <div className="absolute top-3 right-3 bg-black/70 text-white text-xs rounded px-2 py-1 z-10">
           <select
             value={currentLevel}
             onChange={(e) => changeQuality(Number(e.target.value))}
-            className="bg-transparent outline-none"
+            className="bg-transparent  text-orange-300 outline-none"
           >
             <option value={-1}>Auto</option>
             {levels.map((l) => (
-              <option key={l.height} value={l.height}>
-                {l.height}p
+              <option
+                className="text-orange-500 "
+                key={l.height}
+                value={l.height}
+              >
+                {l?.height}p
               </option>
             ))}
           </select>
@@ -162,12 +167,24 @@ const Spinner = () => (
 const LiveTVApp = () => {
   const [channels, setChannels] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const { slug } = useParams();
+  const handlePlay = (ch) => {
+    setCurrent(ch);
+    const slug = ch.name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-") // slug বানায়
+      .replace(/(^-|-$)/g, "");
+    navigate(`/liveTv/${slug}`);
+  };
 
   // 🔹 Load from Server
   useEffect(() => {
     const fetchChannels = async () => {
       try {
-        const { data } = await axios.get("http://localhost:4000");
+        const { data } = await axios.get(
+          "https://iptv-backend-bcd1.onrender.com",
+        );
         setChannels(data);
       } catch (err) {
         toast.error("Failed to load channels!", err?.message);
@@ -218,9 +235,23 @@ const LiveTVApp = () => {
     });
   }, [sanitized, query, activeGroup]);
 
+  // useEffect(() => {
+  //   if (!current && filtered.length) setCurrent(filtered[0]);
+  // }, [filtered, current]);
   useEffect(() => {
-    if (!current && filtered.length) setCurrent(filtered[0]);
-  }, [filtered, current]);
+    if (slug && sanitized.length) {
+      const found = sanitized.find(
+        (c) =>
+          c.name
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/(^-|-$)/g, "") === slug,
+      );
+      if (found) setCurrent(found);
+    } else if (!current && filtered.length) {
+      setCurrent(filtered[0]);
+    }
+  }, [slug, sanitized, filtered, current]);
 
   return (
     <div className="min-h-screen p-4 bg-gray-50">
@@ -283,8 +314,15 @@ const LiveTVApp = () => {
                       key={index}
                       ch={ch}
                       active={current?.url === ch.url}
-                      onPlay={setCurrent}
+                      onPlay={handlePlay}
                     />
+
+                    // <ChannelCard
+                    //   key={index}
+                    //   ch={ch}
+                    //   active={current?.url === ch.url}
+                    //   onPlay={setCurrent}
+                    // />
                   ))}
                 </div>
               </div>

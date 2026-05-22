@@ -3,7 +3,7 @@ import axios from "axios";
 
 const useBaseURL = () => {
   const api = axios.create({
-    baseURL: "http://localhost:4000",
+    baseURL: "https://iptv-backend-bcd1.onrender.com",
   });
 
   return api;

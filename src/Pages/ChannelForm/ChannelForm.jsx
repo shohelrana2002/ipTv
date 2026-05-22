@@ -52,12 +52,16 @@ const ChannelForm = ({ onAdded }) => {
     };
     const token = localStorage.getItem("access-token");
     try {
-      const res = await axios.post("http://localhost:4000/", channelData, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const res = await axios.post(
+        "https://iptv-backend-bcd1.onrender.com/",
+        channelData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
       toast.success("✅ Channel added successfully!", { id: toastId });
       reset();
       setPreview(null);

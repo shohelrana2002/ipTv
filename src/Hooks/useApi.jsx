@@ -6,7 +6,7 @@ const useApi = () => {
   const navigate = useNavigate();
 
   const api = axios.create({
-    baseURL: "http://localhost:4000",
+    baseURL: "https://iptv-backend-bcd1.onrender.com",
   });
 
   api.interceptors.request.use(
@@ -17,7 +17,7 @@ const useApi = () => {
       }
       return config;
     },
-    (error) => Promise.reject(error)
+    (error) => Promise.reject(error),
   );
 
   // Add response interceptor (auto logout if 401/403)
@@ -34,7 +34,7 @@ const useApi = () => {
         toast.error("Session expired, please login again!");
       }
       return Promise.reject(error);
-    }
+    },
   );
 
   return api;

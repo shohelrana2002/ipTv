@@ -15,9 +15,12 @@ const useUserRole = () => {
         return;
       }
       try {
-        const { data } = await axios.get("http://localhost:4000/users", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const { data } = await axios.get(
+          "https://iptv-backend-bcd1.onrender.com/users",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        );
         setUser(Array.isArray(data) ? data[0] : data);
       } catch (err) {
         toast.error(err?.message);

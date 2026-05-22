@@ -27,7 +27,7 @@ const Register = () => {
       await handleSignUp(form.email, form.password);
       await handleSendEmailVerification();
       toast.success("Verification mail sent! Please check your Gmail 📧");
-      await axios.post("http://localhost:4000/users", {
+      await axios.post("https://iptv-backend-bcd1.onrender.com/users", {
         name: form.name,
         email: form.email,
         role: "user",

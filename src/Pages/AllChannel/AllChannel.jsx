@@ -27,7 +27,7 @@ const AllChannel = () => {
   // Fetch channels
   const fetchChannels = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/");
+      const res = await axios.get("https://iptv-backend-bcd1.onrender.com/");
       setData(res.data);
       setFiltered(res.data);
     } catch (err) {
@@ -55,7 +55,7 @@ const AllChannel = () => {
       });
 
       if (result.isConfirmed) {
-        await axios.delete(`http://localhost:4000/${id}`, {
+        await axios.delete(`https://iptv-backend-bcd1.onrender.com/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const updatedData = data.filter((ch) => ch._id !== id);
@@ -84,11 +84,15 @@ const AllChannel = () => {
   const handleUpdate = async () => {
     try {
       const { _id } = selectedChannel;
-      await axios.put(`http://localhost:4000/${_id}`, editData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.put(
+        `https://iptv-backend-bcd1.onrender.com/${_id}`,
+        editData,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
       const updatedData = data.map((ch) =>
-        ch._id === _id ? { ...ch, ...editData } : ch
+        ch._id === _id ? { ...ch, ...editData } : ch,
       );
       setData(updatedData);
       setFiltered(updatedData);
@@ -109,14 +113,14 @@ const AllChannel = () => {
       result = result.filter(
         (ch) =>
           ch.name.toLowerCase().includes(q) ||
-          (ch.group && ch.group.toLowerCase().includes(q))
+          (ch.group && ch.group.toLowerCase().includes(q)),
       );
     }
 
     // Filter by category
     if (category !== "ALL") {
       result = result.filter(
-        (ch) => ch.group && ch.group.toLowerCase() === category.toLowerCase()
+        (ch) => ch.group && ch.group.toLowerCase() === category.toLowerCase(),
       );
     }
 

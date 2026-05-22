@@ -4,7 +4,7 @@ import useGetAuth from "../../Hooks/useGetAuth";
 import toast from "react-hot-toast";
 
 const NavBar = () => {
-  const { role } = useUserRole();
+  const { role, loading } = useUserRole();
   const { handleSignOut } = useGetAuth();
   const navigate = useNavigate();
   const handleLogOut = async () => {
@@ -17,7 +17,7 @@ const NavBar = () => {
       toast.error("Logout failed!", err?.message);
     }
   };
-
+  if (loading) return;
   const nav = (
     <>
       <li>
@@ -27,8 +27,8 @@ const NavBar = () => {
             `block px-4 py-2 rounded-md transition-colors duration-200 font-medium
        ${
          isActive
-           ? "bg-blue-600 text-white shadow-md"
-           : "text-gray-700 hover:bg-blue-100 mx-2 hover:text-blue-700"
+           ? "bg-blue-600 font-semibold text-white shadow-md"
+           : "text-gray-700 font-semibold hover:bg-blue-100 mx-2 hover:text-blue-700"
        }`
           }
         >
@@ -38,12 +38,13 @@ const NavBar = () => {
       <li>
         <NavLink
           to="/liveTv"
+          end={false}
           className={({ isActive }) =>
             `block px-4 py-2 rounded-md transition-colors duration-200 font-medium
        ${
          isActive
-           ? "bg-blue-600 text-white shadow-md"
-           : "text-gray-700 mx-2 hover:bg-blue-100 hover:text-blue-700"
+           ? "bg-blue-600 font-semibold text-white shadow-md"
+           : "text-gray-700 mx-2 font-semibold hover:bg-blue-100 hover:text-blue-700"
        }`
           }
         >
@@ -57,8 +58,8 @@ const NavBar = () => {
             `block px-4 py-2 rounded-md transition-colors duration-200 font-medium
        ${
          isActive
-           ? "bg-blue-600 text-white shadow-md"
-           : "text-gray-700 mx-2 hover:bg-blue-100 hover:text-blue-700"
+           ? "bg-blue-600 font-semibold text-white shadow-md"
+           : "text-gray-700 mx-2 font-semibold hover:bg-blue-100 hover:text-blue-700"
        }`
           }
         >
@@ -71,11 +72,11 @@ const NavBar = () => {
             <NavLink
               to="/dashboard"
               className={({ isActive }) =>
-                `block px-4 py-2 rounded-md transition-colors duration-200 font-medium
+                `block px-4 py-2  rounded-md transition-colors duration-200 font-medium
        ${
          isActive
-           ? "bg-blue-600 text-white shadow-md"
-           : "text-gray-700 mx-2 hover:bg-blue-100 hover:text-blue-700"
+           ? "bg-blue-600 font-semibold text-white shadow-md"
+           : "text-gray-700 mx-2 font-semibold hover:bg-blue-100 hover:text-blue-700"
        }`
               }
             >

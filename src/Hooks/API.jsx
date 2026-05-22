@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:4000",
+  baseURL: "https://iptv-backend-bcd1.onrender.com",
 });
 
 // Add JWT token to request headers if exists
